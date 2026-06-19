@@ -4,8 +4,11 @@ import { RasterRenderer } from '../raster/RasterRender';
 
 //ПРЯМОУГОЛЬНИК
 export class Rect extends Shape {
-    constructor(public w: number, public h: number) {
-        super();
+    type = 'rect'; // Добавили это
+    constructor(public w: number, public h: number) { super(); }
+    
+    toJSON() {
+        return { ...super.toJSON(), w: this.w, h: this.h }; // Добавили это
     }
 
     drawRaster(r: RasterRenderer) {
@@ -47,9 +50,10 @@ export class Rect extends Shape {
 
 //ОВАЛ
 export class Oval extends Shape {
-    constructor(public rx: number, public ry: number) {
-        super();
-    }
+    type = 'oval';
+    constructor(public rx: number, public ry: number) { super(); }
+    toJSON() { return { ...super.toJSON(), rx: this.rx, ry: this.ry }; }
+    
 
     drawRaster(r: RasterRenderer) {
         const m = this.getLocalToDeviceMatrix();
@@ -83,9 +87,10 @@ export class Oval extends Shape {
 
 // ЛИНИЯ
 export class Line extends Shape {
-    constructor(public dx: number, public dy: number) {
-        super();
-    }
+    type = 'line';
+    constructor(public dx: number, public dy: number) { super(); }
+    toJSON() { return { ...super.toJSON(), dx: this.dx, dy: this.dy }; }
+    
 
     drawRaster(r: RasterRenderer) {
         const m = this.getLocalToDeviceMatrix();

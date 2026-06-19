@@ -1,7 +1,9 @@
+import { saveProject, loadProject } from "./Lib/projectStorage";
 import { useEffect, useRef, useState } from "react";
 import { RasterRenderer } from "./Lib/raster/RasterRender";
 import { Rect, Oval } from "./Lib/shapes/Primitives";
 import { Shape } from "./Lib/shapes/Shape";
+
 
 // Типы режимов взаимодействия
 type InteractionMode = 'idle' | 'drag' | 'rotate' | 'resize';
@@ -70,6 +72,32 @@ export default function App() {
     render();
     return () => cancelAnimationFrame(rafId);
   }, [shapes, selectedId]);
+
+  // Автозагрузка при старте
+  useEffect(() => {
+    loadProject("my_project").then(loaded => {
+      if (loaded.length > 0) {
+        setShapes(loaded);
+      }
+    });
+  }, []);
+
+  // Кнопки интерфейса
+  const handleSave = async () => {
+    // Ждем, пока функция отработает
+    const success = await saveProject("my_project", shapes);
+    // Показываем успех ТОЛЬКО если вернулось true
+    if (success) {
+      alert("Проект my_project успешно сохранен в Документы/VectorEngine!");
+    }
+  };
+
+  const handleLoad = () => {
+    loadProject("my_project").then(loaded => {
+      setShapes(loaded);
+      setSelectedId(null);
+    });
+  };
 
 
   // --- СОБЫТИЯ МЫШИ (Pointer Events) ---
@@ -229,6 +257,8 @@ export default function App() {
         <div style={{ borderLeft: '1px solid #555', height: '20px', margin: '0 10px' }} />
         
         <button onClick={deleteSelected} disabled={!selectedId}>Удалить</button>
+        <button onClick={handleSave} style={{ background: '#4CAF50', color: 'white' }}>Сохранить</button>
+        <button onClick={handleLoad} style={{ background: '#2196F3', color: 'white' }}>Загрузить</button>
         <button onClick={moveLayerUp} disabled={!selectedId}>Слой Выше ↑</button>
         <button onClick={moveLayerDown} disabled={!selectedId}>Слой Ниже ↓</button>
         
