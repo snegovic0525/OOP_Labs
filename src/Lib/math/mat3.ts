@@ -12,7 +12,7 @@ export interface Point2D {
 export const EPS = 1e-10;
 
 export const mat3 = {
-  // Базовая матрица (ничего не делает)
+
   identity(): Mat3 {
     return [
       1, 0, 0, 
@@ -21,11 +21,10 @@ export const mat3 = {
     ];
   },
 
-  // Задание 1: Умножение матриц
+  // умножение матриц
   multiply(a: Mat3, b: Mat3): Mat3 {
     const result = [0, 0, 0, 0, 0, 0, 0, 0, 0] as Mat3;
     
-    // Как просили в задании, через 3 цикла
     for (let r = 0; r < 3; r++) {
       for (let c = 0; c < 3; c++) {
         let sum = 0;
@@ -38,7 +37,7 @@ export const mat3 = {
     return result;
   },
 
-  // Задание 2: Сдвиг (перемещение)
+  // сдвиг
   translate(tx: number, ty: number): Mat3 {
     return [
       1, 0, tx,
@@ -47,7 +46,7 @@ export const mat3 = {
     ];
   },
 
-  // Задание 3: Масштаб (размер)
+  // масштаб
   scale(sx: number, sy: number): Mat3 {
     return [
       sx, 0,  0,
@@ -56,7 +55,7 @@ export const mat3 = {
     ];
   },
 
-  // Задание 4: Поворот
+  // поворот
   rotate(rad: number): Mat3 {
     const c = Math.cos(rad);
     const s = Math.sin(rad);
@@ -67,7 +66,7 @@ export const mat3 = {
     ];
   },
 
-  // Задание 6: Сборка всего вместе (Translate * Rotate * Scale)
+  // сборка всего вместе
   fromTransform(tx: number, ty: number, rotationRad: number, sx: number, sy: number): Mat3 {
     const t = this.translate(tx, ty);
     const r = this.rotate(rotationRad);
@@ -77,7 +76,7 @@ export const mat3 = {
     return this.multiply(t, rs);
   },
 
-  // Задание 7: Применение матрицы к точке (клика мышки)
+  // применение матрицы к точке
   transformPoint(m: Mat3, x: number, y: number): Point2D {
     return {
       x: m[0] * x + m[1] * y + m[2],
@@ -85,15 +84,15 @@ export const mat3 = {
     };
   },
 
-  // Задание 5: Обратная матрица (для проверок кликов)
+  // обратная матрица
   invert(m: Mat3): Mat3 | null {
     const a = m[0], b = m[1], tx = m[2];
     const c = m[3], d = m[4], ty = m[5];
 
-    // Ищем детерминант (определитель)
+    // ищем детерминант
     const det = a * d - b * c;
 
-    // Если фигуру сплющило в ноль - обратного пути нет
+    // если фигуру сплющило в ноль - обратного пути нет
     if (Math.abs(det) < EPS) {
       return null;
     }
